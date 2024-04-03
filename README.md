@@ -15,16 +15,41 @@ npm i
 ```shell
 npm run start
 ```
-瀏覽 http://localhost:3000/
-
+- port 設定參考 `main.ts` 檔案的 `await app.listen(5002);` 裡面的 port 設定
+可以修改 `.env` 檔案調整 port
+1. 本地瀏覽 http://localhost:5002/
+2. 遠端瀏覽 http://10.20.37.26:5002/
 # 修正 eslint 錯誤
+[範例與說明](./docs/eslint.md)
+
+# 利用 nest cli 建立 controller
+```shell
+nest g controller member
+nest g controller game
 ```
-Delete `␍` eslint(prettier/prettier) [第 1 行,第 36 欄]
+
+# 利用 nest cli 建立 service
+```shell
+nest g service member
 ```
-修正指令為:
+
+# 讀取 .env 設定檔案
+[範例與說明](./docs/config.md)
+
+# 找不到模組
+```shell
+npm install @nestjs/core
+npm install @nestjs/common
+npm install @nestjs/config
 ```
-npm run lint --fix
-```
-或是在 `.eslintrc.js` 檔案新增參數 `'linebreak-style': 'off'`
-與 `.prettierrc` 檔案新增參數 `"endOfLine": "auto"`
+
+# 新增 Logger
+[範例與說明](./docs/logger.md)
+
+# Bearer Token 認證
+[範例與說明](./docs/Bearer_Token.md)
+
+# 公開一個 API(不須驗證)
+模擬 ASP.NET 的 AllowAnonymous 功能
+[範例與說明](./docs/public.decorator.md)
 
