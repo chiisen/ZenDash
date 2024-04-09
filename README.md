@@ -53,6 +53,12 @@ npm install @nestjs/config
 模擬 ASP.NET 的 AllowAnonymous 功能
 [範例與說明](./docs/public.decorator.md)
 
+
+# MSSQL
+```shell=
+npm install mssql
+```
+
 # git commit message
 - 常用描述
 ```
