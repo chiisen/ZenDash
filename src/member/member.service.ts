@@ -22,10 +22,10 @@ export class MemberService {
 
     const request = new Request(pool);
     const result = await request
-      .input('clubEName', data.clubEName)
+      .input('clubEName', data.account)
       .input('password', data.password)
-      .input('IP', data.IP)
-      .input('UidKey', data.UidKey)
+      .input('IP', '127.0.0.1')
+      .input('UidKey', data.uidKey)
       .input('EnamePasswordUnioid', 'A')
       .execute('NSP_Common_UserLogin_AloneLogin');
 

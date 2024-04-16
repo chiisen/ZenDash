@@ -18,7 +18,7 @@ export class MemberController {
   @Public()
   async login(@Res() res: Response, @Body() body: any): Promise<any> {
     const result: any = await this.memberService.getLogin(body);
-    return res.format({
+    return res.status(200).format({
       'application/json': function () {
         res.send(result);
       },
@@ -31,7 +31,7 @@ export class MemberController {
   @Public()
   async userInfo(@Res() res: Response, @Body() body: any): Promise<any> {
     const result: any = await this.memberService.getUserInfo(body);
-    return res.format({
+    return res.status(200).format({
       'application/json': function () {
         res.send(result);
       },
