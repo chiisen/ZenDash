@@ -1,4 +1,4 @@
-import { Res, Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { Res, Controller, Get, Post, UseGuards, Body } from '@nestjs/common';
 import { GameService } from './game.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
@@ -28,6 +28,16 @@ export class GameController {
   @Public()
   async ServerId(@Res() res: Response, @Body() body: any): Promise<any> {
     const result: string = await this.gameService.getServerId(body);
+    return res.status(200).format({
+      'application/json': function () {
+        res.send(result);
+      },
+    });
+  }
+  @Get('/healthcheck')
+  @Public()
+  async HealthCheck(@Res() res: Response): Promise<any> {
+    const result: string = await this.gameService.getHealthCheck();
     return res.status(200).format({
       'application/json': function () {
         res.send(result);

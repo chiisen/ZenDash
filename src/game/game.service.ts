@@ -43,4 +43,20 @@ export class GameService {
 
     return result.recordset; // or result.returnValue depending on your SP
   }
+  /**
+   * 服務狀態檢查
+   */
+  async getHealthCheck(): Promise<any> {
+    const pool = new ConnectionPool(this.dbConfig);
+    await pool.connect();
+
+    const request = new Request(pool);
+    const result = await request.query(
+      'SELECT name, state_desc FROM sys.databases;',
+    );
+
+    await pool.close();
+
+    return result.recordset; // or result.returnValue depending on your SP
+  }
 }
