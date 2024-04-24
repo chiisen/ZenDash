@@ -1,9 +1,18 @@
-import { Res, Controller, Post, Get, Body } from '@nestjs/common';
+import {
+  Res,
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MemberService } from './member.service';
 import { Public } from '../public.decorator';
 import { Response } from 'express';
+import { LoggingInterceptor } from '../logging.interceptor';
 
 @Controller('/api/member')
+@UseInterceptors(LoggingInterceptor)
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 

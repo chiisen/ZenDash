@@ -1,10 +1,20 @@
-import { Res, Controller, Get, Post, UseGuards, Body } from '@nestjs/common';
+import {
+  Res,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Body,
+  UseInterceptors,
+} from '@nestjs/common';
 import { GameService } from './game.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { Public } from '../public.decorator';
+import { LoggingInterceptor } from '../logging.interceptor';
 
 @Controller('/api/game')
+@UseInterceptors(LoggingInterceptor)
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
