@@ -51,6 +51,10 @@ export class MemberService {
     }
 
     if (result.recordset[0].ErrorCode === 1) {
+      const forwardGameCurrency = this.H1WalletCurrency(
+        result.recordset[0].huilvtype,
+      );
+      const timestamp = Math.floor(Date.now() / 1000) + 1800;
       const token = jwt.sign(
         {
           password: data.password,
@@ -58,12 +62,12 @@ export class MemberService {
           clubid: result.recordset[0].clubid,
           clubename: result.recordset[0].clubename,
           clubcname: result.recordset[0].clubcname,
-          // franchiserid (待補上)
+          franchiserid: result.recordset[0].franchiserid,
           zuBie: result.recordset[0].ZuBie,
           huilvtype: result.recordset[0].huilvtype,
-          // forwardGameCurrency (待補上)
-          // site_id (待補上)
-          // timestamp (待補上)
+          forwardGameCurrency,
+          site_id: '',
+          timestamp,
           isSocialLogin: false,
           union_id: result.recordset[0].Union_id,
           unitKey: result.recordset[0].UnitKey,
@@ -110,6 +114,26 @@ export class MemberService {
       };
     }
   }
+
+  /**
+   * 取得(轉換)H1Wallet進線時的統一貨幣代碼
+   * @param currency
+   * @returns
+   */
+  H1WalletCurrency(currency: string): string {
+    currency = currency.toUpperCase();
+    switch (currency) {
+      case 'NT':
+        return 'TWD';
+      case 'HK':
+        return 'HKD';
+      case 'USA':
+        return 'USD';
+      default:
+        return currency;
+    }
+  }
+
   /**
    * 取得玩家資訊
    */
