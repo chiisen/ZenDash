@@ -68,7 +68,13 @@ export class MemberService {
           union_id: result.recordset[0].Union_id,
           unitKey: result.recordset[0].UnitKey,
         },
-        'de495842bf7196a10db5d3df43fefee9d1b67e43eeb4e02dd074cd4ab83ece59',
+        '57d1b8f4e02eced059d3da10de9dcde44319bbf4ab667e43edfe74fb53ee8429',
+        {
+          algorithm: 'HS256',
+          issuer: 'appapi_dev_jwt',
+          audience: 'appapi_adu',
+          expiresIn: 10080 * 60, // expires in 10080 minutes
+        },
         { expiresIn: '1h' },
       ); // token will expire in 1 hour
       return {
