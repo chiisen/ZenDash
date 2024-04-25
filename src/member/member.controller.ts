@@ -10,22 +10,51 @@ import { MemberService } from './member.service';
 import { Public } from '../public.decorator';
 import { Response } from 'express';
 import { LoggingInterceptor } from '../logging.interceptor';
+import { MemberLoginModel } from '../member-login.model';
+
+/**
+ * @swagger
+ * tags:
+ *   name: Member
+ *   description: Member management
+ */
 
 @Controller('/api/member')
 @UseInterceptors(LoggingInterceptor)
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
+  /**
+   * @swagger
+   * /api/member:
+   *   get:
+   *     summary: Retrieve a list of members
+   *     tags: [Member]
+   *     responses:
+   *       200:
+   *         description: The list of the members
+   */
   @Get()
   async getHello(@Res() res: Response, @Body() body: any): Promise<any> {
     return await this.memberService.getLogin(body);
   }
+
   /**
-   * 取得登入資訊
+   * @swagger
+   * /api/member/login:
+   *   post:
+   *     summary: Login a member
+   *     tags: [Member]
+   *     responses:
+   *       200:
+   *         description: The member was successfully logged in
    */
   @Post('login')
   @Public()
-  async login(@Res() res: Response, @Body() body: any): Promise<any> {
+  async login(
+    @Res() res: Response,
+    @Body() body: MemberLoginModel,
+  ): Promise<any> {
     const result: any = await this.memberService.getLogin(body);
     return res.status(200).format({
       'application/json': function () {
