@@ -55,7 +55,7 @@ export class GameService {
 
     const request = new Request(pool);
     const result = await request.query(
-      'SELECT name, state_desc FROM sys.databases;',
+      "SELECT name, state_desc FROM sys.databases WHERE name = 'HKNetGame_HJ';",
     );
 
     await pool.close();
