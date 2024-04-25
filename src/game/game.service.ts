@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConnectionPool, Request, config } from 'mssql';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import Redis from 'ioredis';
 
 @Injectable()
 export class GameService {
+  constructor(@InjectRedis() private readonly redis: Redis) {}
   private dbConfig: config = {
     user: 'mobile_api',
     password: 'a:oY%~^E+VU0',
@@ -57,6 +60,12 @@ export class GameService {
 
     await pool.close();
 
-    return result.recordset; // or result.returnValue depending on your SP
+    const isRedisHealthy = await this.redis.ping();
+    if (isRedisHealthy !== 'PONG') {
+      throw new Error('Redis is not healthy');
+    }
+    console.log('Redis is healthy');
+
+    return { isDbHealthy: result.recordset, isRedisHealthy }; // or result.returnValue depending on your SP
   }
 }

@@ -82,3 +82,9 @@ http://localhost:8000/swagger
 # CROS
 main.ts 不要限制 CROS 直接寫 app.enableCors(); 就可以
 
+# redis
+```
+npm install @nestjs-modules/ioredis ioredis
+```
+
+
