@@ -11,6 +11,7 @@ import { Public } from '../public.decorator';
 import { Response } from 'express';
 import { LoggingInterceptor } from '../logging.interceptor';
 import { MemberLoginModel } from '../member-login.model';
+import { ApiOperation } from '@nestjs/swagger';
 
 /**
  * @swagger
@@ -50,6 +51,7 @@ export class MemberController {
    *         description: The member was successfully logged in
    */
   @Post('login')
+  @ApiOperation({ summary: '登入' })
   @Public()
   async login(
     @Res() res: Response,
@@ -66,6 +68,7 @@ export class MemberController {
    * 取得玩家資訊
    */
   @Post('userInfo')
+  @ApiOperation({ summary: '取得玩家資訊' })
   @Public()
   async userInfo(@Res() res: Response, @Body() body: any): Promise<any> {
     const result: any = await this.memberService.getUserInfo(body);
