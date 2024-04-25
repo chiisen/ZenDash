@@ -1,4 +1,5 @@
 import {
+  Req,
   Res,
   Controller,
   Get,
@@ -25,13 +26,19 @@ export class GameController {
   @UseGuards(AuthGuard('bearer'))
   @Post('/GetGameToken/W1RCGv3')
   @ApiOperation({ summary: '取得進桌的進線 url (測試用)' })
-  w1RCGv3(@Res() res: Response): any {
-    const result: string = this.gameService.getW1RCGv3();
-    return res.status(200).format({
-      'application/json': function () {
-        res.send(result);
-      },
-    });
+  w1RCGv3(@Req() req: Request, @Res() res: Response): any {
+    const authHeader = req.headers['authorization'];
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      //console.log(token);
+      const result: string = this.gameService.getW1RCGv3(token);
+      return res.status(200).format({
+        'application/json': function () {
+          res.send(result);
+        },
+      });
+    }
   }
   /**
    * 用 thirdParty_id 取得 Server_id

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConnectionPool, Request, config } from 'mssql';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class GameService {
@@ -19,7 +20,17 @@ export class GameService {
   /**
    * 取得進桌的進線 url (測試用)
    */
-  getW1RCGv3(): string {
+  getW1RCGv3(token: string): string {
+    try {
+      const decoded = jwt.verify(
+        token,
+        '57d1b8f4e02eced059d3da10de9dcde44319bbf4ab667e43edfe74fb53ee8429',
+      );
+      const clubid = decoded.clubid;
+      console.log(clubid);
+    } catch (err) {
+      console.error('Failed to decode JWT', err);
+    }
     return `{
         "status": 1,
         "desc": "SUCCESS",
