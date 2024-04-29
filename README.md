@@ -86,5 +86,7 @@ main.ts 不要限制 CROS 直接寫 app.enableCors(); 就可以
 ```
 npm install @nestjs-modules/ioredis ioredis
 ```
-
-
+# memory cache
+```
+npm install cache-manager
+```
