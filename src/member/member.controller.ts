@@ -10,7 +10,7 @@ import { MemberService } from './member.service';
 import { Public } from '../public.decorator';
 import { Response } from 'express';
 import { LoggingInterceptor } from '../middleware/logging.interceptor';
-import { MemberLoginModel } from '../model/member-login.model';
+import { MemberLoginModel, UserInfoModel } from '../model/member-login.model';
 import { ApiOperation } from '@nestjs/swagger';
 
 /**
@@ -70,7 +70,10 @@ export class MemberController {
   @Post('userInfo')
   @ApiOperation({ summary: '取得玩家資訊' })
   @Public()
-  async userInfo(@Res() res: Response, @Body() body: any): Promise<any> {
+  async userInfo(
+    @Res() res: Response,
+    @Body() body: UserInfoModel,
+  ): Promise<any> {
     const result: any = await this.memberService.getUserInfo(body);
     return res.status(200).format({
       'application/json': function () {

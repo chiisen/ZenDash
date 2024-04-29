@@ -7,19 +7,28 @@ export class MemberLoginModel {
    */
   @ApiProperty({ description: '帳號: Club_Ename' })
   @IsNotEmpty()
-  Account: string;
+  account: string;
 
   /**
    * 密碼: MD5(password)
    */
   @ApiProperty({ description: '密碼: MD5(password)' })
   @IsNotEmpty()
-  Password: string;
+  password: string;
 
   /**
    * 裝置id: Web | Mobile
    */
   @ApiProperty({ description: '裝置id: Web | Mobile' })
   @IsNotEmpty()
-  UidKey: string;
+  uidKey: string;
+}
+
+export class UserInfoModel {
+  /**
+   * 帳號: Club_Ename
+   */
+  @ApiProperty({ description: '帳號: Club_Ename' })
+  @IsNotEmpty()
+  account: string;
 }

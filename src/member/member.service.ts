@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConnectionPool, Request, config } from 'mssql';
 import * as jwt from 'jsonwebtoken';
+import * as cache from 'memory-cache';
+import { MemberLoginModel, UserInfoModel } from 'src/model/member-login.model';
 
 @Injectable()
 export class MemberService {
@@ -17,7 +19,7 @@ export class MemberService {
   /**
    * 取得登入資訊
    */
-  async getLogin(data: any): Promise<any> {
+  async getLogin(data: MemberLoginModel): Promise<any> {
     const pool = new ConnectionPool(this.dbConfig);
     await pool.connect();
 
@@ -149,17 +151,22 @@ export class MemberService {
   /**
    * 取得玩家資訊
    */
-  async getUserInfo(data: any): Promise<any> {
-    const pool = new ConnectionPool(this.dbConfig);
-    await pool.connect();
+  async getUserInfo(data: UserInfoModel): Promise<any> {
+    let value = cache.get('user-info');
+    if (!value) {
+      const pool = new ConnectionPool(this.dbConfig);
+      await pool.connect();
 
-    const request = new Request(pool);
-    const result = await request
-      .input('account', data.account + '%')
-      .query('SELECT * FROM T_Club WHERE (Club_Ename LIKE @account)');
+      const request = new Request(pool);
+      const result = await request
+        .input('account', data.account + '%')
+        .query('SELECT * FROM T_Club WHERE (Club_Ename LIKE @account)');
 
-    await pool.close();
+      await pool.close();
 
-    return result.recordset; // or result.returnValue depending on your SP
+      value = result.recordset; // or result.returnValue depending on your SP
+      cache.put('user-info', value, 60000); // cache for 60 seconds
+    }
+    return value;
   }
 }
