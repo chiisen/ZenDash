@@ -12,7 +12,7 @@ import { GameService } from './game.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { Public } from '../public.decorator';
-import { LoggingInterceptor } from '../logging.interceptor';
+import { LoggingInterceptor } from '../middleware/logging.interceptor';
 import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('/api/game')

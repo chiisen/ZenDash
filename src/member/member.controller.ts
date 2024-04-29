@@ -9,8 +9,8 @@ import {
 import { MemberService } from './member.service';
 import { Public } from '../public.decorator';
 import { Response } from 'express';
-import { LoggingInterceptor } from '../logging.interceptor';
-import { MemberLoginModel } from '../member-login.model';
+import { LoggingInterceptor } from '../middleware/logging.interceptor';
+import { MemberLoginModel } from '../model/member-login.model';
 import { ApiOperation } from '@nestjs/swagger';
 
 /**
