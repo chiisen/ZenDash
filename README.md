@@ -90,3 +90,7 @@ npm install @nestjs-modules/ioredis ioredis
 ```
 npm install cache-manager
 ```
+
+# ZeroTier
+- 利用 ZeroTier 的工具可以建立一個私人區網 VPN，讓多個裝置可以互相溝通。
+
