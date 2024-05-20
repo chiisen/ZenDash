@@ -186,6 +186,6 @@ export class MemberService {
 
     await pool.close();
 
-    return result.recordset; // or result.returnValue depending on your SP
+    return result.recordsets;
   }
 }
