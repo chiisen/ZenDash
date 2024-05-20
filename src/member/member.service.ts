@@ -169,4 +169,23 @@ export class MemberService {
     }
     return value;
   }
+  /**
+   * 更新會員狀態
+   */
+  async updateMemberStatus(data: any): Promise<any> {
+    const pool = new ConnectionPool(this.dbConfig);
+    await pool.connect();
+
+    const request = new Request(pool);
+    const result = await request
+      .input('status', data.status)
+      .input('club_id', data.club_id)
+      .query(
+        `UPDATE [T_Club] SET ${data.field_name} = @status WHERE Club_id = @club_id `,
+      );
+
+    await pool.close();
+
+    return result.recordset; // or result.returnValue depending on your SP
+  }
 }

@@ -81,4 +81,21 @@ export class MemberController {
       },
     });
   }
+  /**
+   * 更新會員狀態
+   */
+  @Post('/UpdateMemberStatus')
+  @ApiOperation({ summary: '更新會員狀態' })
+  @Public()
+  async UpdateMemberStatus(
+    @Res() res: Response,
+    @Body() body: any,
+  ): Promise<any> {
+    const result: string = await this.memberService.updateMemberStatus(body);
+    return res.status(200).format({
+      'application/json': function () {
+        res.send(result);
+      },
+    });
+  }
 }
