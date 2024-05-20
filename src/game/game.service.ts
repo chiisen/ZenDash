@@ -79,4 +79,21 @@ export class GameService {
 
     return { isDbHealthy: result.recordset, isRedisHealthy }; // or result.returnValue depending on your SP
   }
+
+  /**
+   * 取得目前抓單的狀態
+   */
+  async getReportStatusCheck(): Promise<any> {
+    const pool = new ConnectionPool(this.dbConfig);
+    await pool.connect();
+
+    const request = new Request(pool);
+    const result = await request.query(
+      'SELECT * FROM [HKNetGame_HJ].[dbo].[T_Club_Stake_Current]',
+    );
+
+    await pool.close();
+
+    return result.recordset; // or result.returnValue depending on your SP
+  }
 }

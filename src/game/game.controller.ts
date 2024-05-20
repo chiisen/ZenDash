@@ -65,4 +65,15 @@ export class GameController {
       },
     });
   }
+  @Get('/ReportStatusCheck')
+  @ApiOperation({ summary: '取得目前抓單的狀態' })
+  @Public()
+  async ReportStatusCheck(@Res() res: Response): Promise<any> {
+    const result: string = await this.gameService.getReportStatusCheck();
+    return res.status(200).format({
+      'application/json': function () {
+        res.send(result);
+      },
+    });
+  }
 }
