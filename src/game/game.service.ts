@@ -142,6 +142,26 @@ export class GameService {
   }
 
   /**
+   * 轉換真實的 thirdParty_id 對應 Router
+   */
+  async getThirdPartyIdAsync(thirdParty_id: string): Promise<any> {
+    switch (thirdParty_id) {
+      case 'JDB':
+        return 'W1JDB';
+      case 'Royal':
+        return 'W1Royal';
+      case 'RSG':
+        return 'W1Royal';
+      case 'WM':
+        return 'WMLive';
+      case 'RCG':
+        return 'W1RCGv2';
+      default:
+        return thirdParty_id;
+    }
+  }
+
+  /**
    * 回饋進線狀態
    */
   async getGameTokenAsync(
@@ -185,12 +205,18 @@ export class GameService {
           gameCode: `${gameList[0].id}`,
         };
 
+        // 進線的特例
+        const thirdParty_id = await this.getThirdPartyIdAsync(
+          data.thirdParty_id,
+        );
+
         const gameToken = await myThis.callHttpPostApi(
-          `${this.host}/api/Game/GetGameToken/${data.thirdParty_id}`,
+          `${this.host}/api/Game/GetGameToken/${thirdParty_id}`,
           gameInfo,
           login.result.token,
         );
 
+        // 新增回應的資訊
         gameToken.count = count;
         gameToken.id = gameList[0].id;
         gameToken.clubename = login.result.clubename;
