@@ -76,4 +76,18 @@ export class GameController {
       },
     });
   }
+  /**
+   * 指定 thirdParty_id 測試所有遊戲的進線狀態
+   */
+  @Post('/GetGameToken')
+  @ApiOperation({ summary: '指定 thirdParty_id 測試所有遊戲的進線狀態' })
+  @Public()
+  async GetGameToken(@Res() res: Response, @Body() body: any): Promise<any> {
+    const result: string = await this.gameService.getGameToken(body);
+    return res.status(200).format({
+      'application/json': function () {
+        res.send(result);
+      },
+    });
+  }
 }

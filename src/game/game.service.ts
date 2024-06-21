@@ -3,6 +3,7 @@ import { ConnectionPool, Request, config } from 'mssql';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import * as jwt from 'jsonwebtoken';
+import axios from 'axios';
 
 @Injectable()
 export class GameService {
@@ -17,6 +18,7 @@ export class GameService {
       trustServerCertificate: true, // enabling this option allows self-signed and expired certificates
     },
   };
+  private host = 'https://pwaapi.bacctest.com';
   /**
    * 取得進桌的進線 url (測試用)
    */
@@ -95,5 +97,161 @@ export class GameService {
     await pool.close();
 
     return result.recordset; // or result.returnValue depending on your SP
+  }
+
+  /**
+   * 指定 thirdParty_id 測試所有遊戲的進線狀態
+   */
+  async getGameToken(data: any): Promise<any> {
+    const pool = new ConnectionPool(this.dbConfig);
+    await pool.connect();
+
+    const request = new Request(pool);
+    const result = await request
+      .input('thirdParty_id', data.thirdParty_id + 'Room')
+      .query(
+        "SELECT TOP (200) * FROM [HKNetGame_HJ].[dbo].[T_Club] WHERE Active = 1 AND [Club_Ename] LIKE 'A00%' ORDER BY [Club_Ename]",
+      );
+
+    await pool.close();
+
+    const gameList = await this.getGameListAsync(data);
+
+    // 定義一個可以儲存任何類型資料的 list
+    const list: any[] = [];
+
+    let count = 1;
+    for (const element of result.recordset) {
+      await this.getGameTokenAsync(element, this, count, list, gameList, data); // 將您的異步操作放在這裡
+      count += 1;
+    }
+
+    return list;
+  }
+
+  /**
+   * 取得遊戲列表
+   */
+  async getGameListAsync(data: any): Promise<any> {
+    // 取得遊戲列表
+    const gameList = await this.callHttpGetApi(
+      `${this.host}/webCache/GetSlotGame${data.thirdParty_id}List`,
+    );
+
+    return gameList;
+  }
+
+  /**
+   * 回饋進線狀態
+   */
+  async getGameTokenAsync(
+    element: any,
+    myThis: any,
+    count: number,
+    list: any[],
+    gameList: any[],
+    data: any,
+  ): Promise<any> {
+    try {
+      if (gameList.length === 0) {
+        return;
+      }
+
+      // 定义一个 JSON 对象
+      const userInfo = {
+        account: element.Club_Ename,
+        password: element.Password,
+        uidKey: 'web',
+      };
+
+      // 打印 JSON 对象
+      console.log(userInfo);
+
+      const login = await myThis.callHttpPostApi(
+        `${this.host}/api/Member/login`,
+        userInfo,
+      );
+
+      console.log(login);
+
+      login.count = count;
+
+      if (login.errorDetail == null) {
+        // 定义一个 JSON 对象
+        const gameInfo = {
+          device: 'DESKTOP',
+          lang: 'zh-tw',
+          lobbyURL: 'https://ts.bacctest.com/close',
+          gameCode: `${gameList[0].id}`,
+        };
+
+        const gameToken = await myThis.callHttpPostApi(
+          `${this.host}/api/Game/GetGameToken/${data.thirdParty_id}`,
+          gameInfo,
+          login.result.token,
+        );
+
+        gameToken.count = count;
+        gameToken.id = gameList[0].id;
+        gameToken.clubename = login.result.clubename;
+
+        if (gameToken.errorDetail == null) {
+          console.log(gameToken);
+
+          list.push(gameToken);
+
+          gameList.splice(0, 1);
+        }
+      } else {
+        list.push({ login: login.result });
+      }
+    } catch (error) {
+      console.error('Error Message:', error.message);
+    }
+  }
+
+  /**
+   * 呼叫 Http POST
+   */
+  async callHttpPostApi(url: string, data: any, token?: string) {
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // 在這裡加入 Bearer Token
+        },
+      });
+
+      return response.data; // 返回響應中的資料
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error Message:', error.message);
+        // 處理錯誤
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+  }
+
+  /**
+   * 呼叫 Http GET
+   */
+  async callHttpGetApi(url: string) {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.data; // 返回響應中的資料
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error Message:', error.message);
+        // 處理錯誤
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
   }
 }
