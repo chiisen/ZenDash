@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios'; // 更新導入
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MemberController } from './member/member.controller';
@@ -13,6 +14,9 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
   imports: [
+    HttpModule.register({
+      timeout: 90000, // 超時時間設置為 90 秒
+    }),
     ConfigModule.forRoot(),
     PassportModule,
     RedisModule.forRoot({
