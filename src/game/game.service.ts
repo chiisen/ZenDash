@@ -192,8 +192,6 @@ export class GameService {
         userInfo,
       );
 
-      console.log(login);
-
       login.count = count;
 
       if (login.errorDetail == null) {
@@ -222,8 +220,6 @@ export class GameService {
         gameToken.clubename = login.result.clubename;
 
         if (gameToken.errorDetail == null) {
-          console.log(gameToken);
-
           list.push(gameToken);
 
           gameList.splice(0, 1);
