@@ -112,3 +112,22 @@ npm install cache-manager
 </script>
 <p>測試 socket.io 結束</p>
 ```
+
+# getGameToken
+```html
+<p>測試 socket.io 開始</p>
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.0.0/dist/socket.io.js"></script>
+<script>
+  const socket = io("http://localhost:8000");
+  socket.on("getGameToken", function (data) {
+    console.log(data);
+  });
+  socket.emit(
+    "getGameToken",
+    `{
+    "thirdParty_id": "AE"
+  }`
+  );
+</script>
+<p>測試 socket.io 結束</p>
+```
