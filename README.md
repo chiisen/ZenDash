@@ -94,3 +94,21 @@ npm install cache-manager
 # ZeroTier
 - 利用 ZeroTier 的工具可以建立一個私人區網 VPN，讓多個裝置可以互相溝通。
 
+# websocket
+- 測試 websocket 的客戶端測試程式範例
+```html
+<p>測試 socket.io 開始</p>
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.0.0/dist/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:8000');
+  socket.on('message', function(data) {
+    console.log(data);
+  });
+  socket.on('response', function(data) {
+    console.log(data);
+  });
+  // 回傳訊息給發送消息的客戶端
+  socket.emit('message', 'CLIENT_SAY: Hello World');
+</script>
+<p>測試 socket.io 結束</p>
+```

@@ -11,6 +11,7 @@ import { GameController } from './game/game.controller';
 import { GameService } from './game/game.service';
 import { ExampleController } from './example/example.controller';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { EventsGateway } from './events.gateway';
 
 @Module({
   imports: [
@@ -40,6 +41,12 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     GameController,
     ExampleController,
   ],
-  providers: [AppService, MemberService, HttpStrategy, GameService],
+  providers: [
+    AppService,
+    MemberService,
+    HttpStrategy,
+    GameService,
+    EventsGateway,
+  ],
 })
 export class AppModule {}
