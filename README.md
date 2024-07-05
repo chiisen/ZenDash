@@ -1,15 +1,20 @@
 # ZenDash
-禪心儀表板: 代表冥想和平靜，這個名稱暗示了一個平靜且直觀的儀表板。
+禪心儀表板:
+代表冥想和平靜，這個名稱暗示了一個平靜且直觀的儀表板。  
+
+還在為難用的後台工具而懊惱不已嗎？  
+既然改變不了現狀，那就來改變一下心態吧！  
+我們一起重建一個新世界。  
+
+這是一個使用 Nest.js 框架為基礎開發的後端工具平台。  
+希望能無限接近於舊版的工具後台，並且提供更多的功能。  
+
 
 # 初始化
-- nest
 ```shell
-npm install -g @nestjs/cli
-
-nest -h
-
 npm i
 ```
+[安裝 Nest.js CLI](./docs/install_nestjs.md)
 
 # 執行
 ```shell
@@ -68,13 +73,8 @@ npm install mssql
 ```
 
 # git commit message
-- 常用描述
-```
-✨ feat: 需求功能描述
-🐛 fix: 修正 bug 的問題描述
-💄 optimize: 最佳化程式碼或功能流程
-🔧 chore: 雜事，例如: 調整設定檔案等等 
-```
+[常用描述](./docs/git_commit_message.md)
+
 
 # swagger
 http://localhost:8000/swagger
