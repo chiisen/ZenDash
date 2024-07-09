@@ -58,7 +58,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Step 3: 呼叫 GameService 的方法
     try {
       const obj = JSON.parse(data);
-      const gameInfo = await this.gameService.getGameToken(obj); // 假設 playGame 是 GameService 中的一個方法
+      const gameInfo = await this.gameService.getAllGameToken(obj); // 假設 playGame 是 GameService 中的一個方法
       client.emit('getGameToken', gameInfo);
     } catch (error) {
       client.emit('error', error.message);

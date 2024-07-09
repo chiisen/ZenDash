@@ -14,6 +14,8 @@ import { Response } from 'express';
 import { Public } from '../public.decorator';
 import { LoggingInterceptor } from '../middleware/logging.interceptor';
 import { ApiOperation } from '@nestjs/swagger';
+import { AllGameTokenModel } from '../model/game.model';
+import { ServerIdModel } from '../model/game.model';
 
 @Controller('/api/game')
 @UseInterceptors(LoggingInterceptor)
@@ -46,7 +48,10 @@ export class GameController {
   @Post('/ServerId')
   @ApiOperation({ summary: '用 thirdParty_id 取得 Server_id' })
   @Public()
-  async ServerId(@Res() res: Response, @Body() body: any): Promise<any> {
+  async ServerId(
+    @Res() res: Response,
+    @Body() body: ServerIdModel,
+  ): Promise<any> {
     const result: string = await this.gameService.getServerId(body);
     return res.status(200).format({
       'application/json': function () {
@@ -82,8 +87,11 @@ export class GameController {
   @Post('/GetGameToken')
   @ApiOperation({ summary: '指定 thirdParty_id 測試所有遊戲的進線狀態' })
   @Public()
-  async GetGameToken(@Res() res: Response, @Body() body: any): Promise<any> {
-    const result: string = await this.gameService.getGameToken(body);
+  async GetGameToken(
+    @Res() res: Response,
+    @Body() body: AllGameTokenModel,
+  ): Promise<any> {
+    const result: string = await this.gameService.getAllGameToken(body);
     return res.status(200).format({
       'application/json': function () {
         res.send(result);

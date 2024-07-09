@@ -4,6 +4,11 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
+import {
+  AllGameTokenModel,
+  ServerIdModel,
+  GameListModel,
+} from '../model/game.model';
 
 @Injectable()
 export class GameService {
@@ -44,7 +49,7 @@ export class GameService {
   /**
    * 用 thirdParty_id 取得 Server_id
    */
-  async getServerId(data: any): Promise<any> {
+  async getServerId(data: ServerIdModel): Promise<any> {
     const pool = new ConnectionPool(this.dbConfig);
     await pool.connect();
 
@@ -102,7 +107,7 @@ export class GameService {
   /**
    * 指定 thirdParty_id 測試所有遊戲的進線狀態
    */
-  async getGameToken(data: any): Promise<any> {
+  async getAllGameToken(data: AllGameTokenModel): Promise<any> {
     const pool = new ConnectionPool(this.dbConfig);
     await pool.connect();
 
@@ -132,7 +137,7 @@ export class GameService {
   /**
    * 取得遊戲列表
    */
-  async getGameListAsync(data: any): Promise<any> {
+  async getGameListAsync(data: GameListModel): Promise<any> {
     // 取得遊戲列表
     const gameList = await this.callHttpGetApi(
       `${this.host}/webCache/GetSlotGame${data.thirdParty_id}List`,
