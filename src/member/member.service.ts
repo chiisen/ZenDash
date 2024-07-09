@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConnectionPool, Request, config } from 'mssql';
 import * as jwt from 'jsonwebtoken';
 import * as cache from 'memory-cache';
-import { MemberLoginModel, UserInfoModel } from 'src/model/member-login.model';
+import { MemberLoginModel } from 'src/model/member-login.model';
+import { UserInfoModel } from 'src/model/member-userinfo.model';
+import { UpdateMemberStatusModel } from 'src/model/member-update-member-status.model';
 
 @Injectable()
 export class MemberService {
@@ -172,7 +174,7 @@ export class MemberService {
   /**
    * 更新會員狀態
    */
-  async updateMemberStatus(data: any): Promise<any> {
+  async updateMemberStatus(data: UpdateMemberStatusModel): Promise<any> {
     const pool = new ConnectionPool(this.dbConfig);
     await pool.connect();
 

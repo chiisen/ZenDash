@@ -23,12 +23,3 @@ export class MemberLoginModel {
   @IsNotEmpty()
   uidKey: string;
 }
-
-export class UserInfoModel {
-  /**
-   * 帳號: Club_Ename
-   */
-  @ApiProperty({ description: '帳號: Club_Ename' })
-  @IsNotEmpty()
-  account: string;
-}

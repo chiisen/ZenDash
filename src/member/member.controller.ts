@@ -10,7 +10,9 @@ import { MemberService } from './member.service';
 import { Public } from '../public.decorator';
 import { Response } from 'express';
 import { LoggingInterceptor } from '../middleware/logging.interceptor';
-import { MemberLoginModel, UserInfoModel } from '../model/member-login.model';
+import { MemberLoginModel } from '../model/member-login.model';
+import { UserInfoModel } from '../model/member-userinfo.model';
+import { UpdateMemberStatusModel } from '../model/member-update-member-status.model';
 import { ApiOperation } from '@nestjs/swagger';
 
 /**
@@ -89,7 +91,7 @@ export class MemberController {
   @Public()
   async UpdateMemberStatus(
     @Res() res: Response,
-    @Body() body: any,
+    @Body() body: UpdateMemberStatusModel,
   ): Promise<any> {
     const result: string = await this.memberService.updateMemberStatus(body);
     return res.status(200).format({
