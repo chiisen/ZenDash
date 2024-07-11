@@ -12,9 +12,12 @@ import { GameService } from './game/game.service';
 import { ExampleController } from './example/example.controller';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { EventsGateway } from './events.gateway';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksService } from './schedule/tasksService';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     HttpModule.register({
       timeout: 90000, // 超時時間設置為 90 秒
     }),
@@ -47,6 +50,7 @@ import { EventsGateway } from './events.gateway';
     HttpStrategy,
     GameService,
     EventsGateway,
+    TasksService,
   ],
 })
 export class AppModule {}
