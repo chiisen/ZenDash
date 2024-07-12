@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
+import { Decimal } from 'decimal.js';
 
 @Injectable()
 export class TasksService implements OnModuleInit {
@@ -12,10 +13,26 @@ export class TasksService implements OnModuleInit {
     this.handleCron(); // 啟動時立即執行一次
   }
 
+  /**
+   * 用高精度套件計算總合
+   * @param a
+   * @param b
+   * @returns
+   */
+  add(a: string, b: string): string {
+    const result = new Decimal(a).plus(new Decimal(b));
+    return result.toString();
+  }
+
   constructor(@InjectRedis() private readonly redis: Redis) {}
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCron() {
     // 這裡實現你的任務邏輯
+    const result = this.add('0.1', '0.2');
+    if (result != '0.3') {
+      this.logger.error(`${result}`);
+    }
+
     const isRedisHealthy = await this.redis.ping();
     if (isRedisHealthy !== 'PONG') {
       this.logger.error('Redis is not healthy');
