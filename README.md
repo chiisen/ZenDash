@@ -66,9 +66,13 @@ npm install @nestjs/config
 模擬 ASP.NET 的 AllowAnonymous 功能
 [範例與說明](./docs/public.decorator.md)
 
+# 安裝 .env 設定檔案
+```shell
+npm install dotenv
+```
 
 # MSSQL
-```shell=
+```shell
 npm install mssql
 ```
 
@@ -83,11 +87,11 @@ http://localhost:8000/swagger
 main.ts 不要限制 CROS 直接寫 app.enableCors(); 就可以
 
 # redis
-```
+```shell
 npm install @nestjs-modules/ioredis ioredis
 ```
 # memory cache
-```
+```shell
 npm install cache-manager
 ```
 
