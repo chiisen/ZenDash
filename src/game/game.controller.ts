@@ -14,7 +14,7 @@ import { Response } from 'express';
 import { Public } from '../public.decorator';
 import { LoggingInterceptor } from '../middleware/logging.interceptor';
 import { ApiOperation } from '@nestjs/swagger';
-import { AllGameTokenModel } from '../model/game.model';
+import { AllGameTokenModel, BankInfoModel } from '../model/game.model';
 import { ServerIdModel } from '../model/game.model';
 
 @Controller('/api/game')
@@ -95,6 +95,25 @@ export class GameController {
     return res.status(200).format({
       'application/json': function () {
         res.send(result);
+      },
+    });
+  }
+  /**
+   * 指定 club_id 刪除 BankCode、Bank_account、Account_Name
+   */
+  @Post('/DeleteBankInfo')
+  @ApiOperation({
+    summary: '指定 club_id 刪除 BankCode、Bank_account、Account_Name',
+  })
+  @Public()
+  async DeleteBankInfo(
+    @Res() res: Response,
+    @Body() body: BankInfoModel,
+  ): Promise<any> {
+    await this.gameService.deleteBankInfo(body);
+    return res.status(200).format({
+      'application/json': function () {
+        res.send('OK');
       },
     });
   }

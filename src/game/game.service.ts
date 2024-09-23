@@ -8,6 +8,7 @@ import {
   AllGameTokenModel,
   ServerIdModel,
   GameListModel,
+  BankInfoModel,
 } from '../model/game.model';
 
 @Injectable()
@@ -132,6 +133,23 @@ export class GameService {
     }
 
     return list;
+  }
+
+  /**
+   * 指定 club_id 刪除 BankCode、Bank_account、Account_Name
+   */
+  async deleteBankInfo(data: BankInfoModel) {
+    const pool = new ConnectionPool(this.dbConfig);
+    await pool.connect();
+
+    const request = new Request(pool);
+    await request
+      .input('Club_Id', data.club_id)
+      .query(
+        'DELETE FROM [HKNetGame_HJ].[dbo].[T_BankAccount_Club] WHERE [Club_Id] = @Club_Id;',
+      );
+
+    await pool.close();
   }
 
   /**
