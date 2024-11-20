@@ -41,6 +41,17 @@ export class TasksService implements OnModuleInit {
     this.logger.log('Redis is healthy');
 
     try {
+      const value = await this.redis.get('ZenDash:ReBoot');
+      if (this.isNotNullOrWhitespace(value)) {
+      } else {
+        this.logger.warn('⚠Redis 重開過❗❗❗');
+      }
+    } catch (error) {
+      this.logger.error('🆘Error fetching from Redis', error.stack);
+      throw error;
+    }
+
+    try {
       const value = await this.redis.get('K8SDEV_eventnews_1');
       if (this.isNotNullOrWhitespace(value)) {
         const obj = JSON.parse(value); // 將JSON字串轉換成物件
