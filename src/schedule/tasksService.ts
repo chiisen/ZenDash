@@ -52,12 +52,12 @@ export class TasksService implements OnModuleInit {
     }
 
     try {
-      const value = await this.redis.get('K8SDEV_eventnews_1');
-      if (this.isNotNullOrWhitespace(value)) {
-        const obj = JSON.parse(value); // 將JSON字串轉換成物件
-        this.logger.log(`👍EventNews: ${obj[0].EventNewsTitle}`);
-      } else {
-        this.logger.warn('⚠EventNews: Value is null or whitespace');
+      for (let i = 1; i <= 12; i++) {
+        const value = await this.redis.get(`K8SDEV_eventnews_${i}`);
+        if (this.isNotNullOrWhitespace(value)) {
+        } else {
+          this.logger.warn(`⚠EventNews_${i}: Value is null or whitespace`);
+        }
       }
     } catch (error) {
       this.logger.error('🆘Error fetching from Redis', error.stack);
