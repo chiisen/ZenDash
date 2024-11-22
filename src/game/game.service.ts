@@ -69,21 +69,34 @@ export class GameService {
    * 服務狀態檢查
    */
   async getHealthCheck(): Promise<any> {
-    const pool = new ConnectionPool(this.dbConfig);
-    await pool.connect();
+    let result;
+    try {
+      const pool = new ConnectionPool(this.dbConfig);
+      await pool.connect();
 
-    const request = new Request(pool);
-    const result = await request.query(
-      "SELECT name, state_desc FROM sys.databases WHERE name = 'HKNetGame_HJ';",
-    );
+      const request = new Request(pool);
+      result = await request.query(
+        "SELECT name, state_desc FROM sys.databases WHERE name = 'HKNetGame_HJ';",
+      );
 
-    await pool.close();
-
-    const isRedisHealthy = await this.redis.ping();
-    if (isRedisHealthy !== 'PONG') {
-      throw new Error('Redis is not healthy');
+      await pool.close();
+    } catch (error) {
+      console.error('Error Message:', error.message);
     }
-    console.log('Redis is healthy');
+
+    let isRedisHealthy;
+    try {
+      isRedisHealthy = await this.redis.ping();
+      if (isRedisHealthy !== 'PONG') {
+        isRedisHealthy = 'Redis is not healthy';
+      }
+    } catch (error) {
+      console.error('Error Message:', error.message);
+      isRedisHealthy = error.message;
+    }
+    if (isRedisHealthy == 'PONG') {
+      console.log('Redis is healthy');
+    }
 
     return { isDbHealthy: result.recordset, isRedisHealthy }; // or result.returnValue depending on your SP
   }
