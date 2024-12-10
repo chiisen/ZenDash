@@ -13,6 +13,7 @@ import { LoggingInterceptor } from '../middleware/logging.interceptor';
 import { MemberLoginModel } from '../model/member-login.model';
 import { UserInfoModel } from '../model/member-userinfo.model';
 import { UpdateMemberStatusModel } from '../model/member-update-member-status.model';
+import { GetBankPasswordModel } from '../model/member-get-bank-password.model';
 import { ApiOperation } from '@nestjs/swagger';
 
 /**
@@ -94,6 +95,23 @@ export class MemberController {
     @Body() body: UpdateMemberStatusModel,
   ): Promise<any> {
     const result: string = await this.memberService.updateMemberStatus(body);
+    return res.status(200).format({
+      'application/json': function () {
+        res.send(result);
+      },
+    });
+  }
+  /**
+   * 查詢資金密碼
+   */
+  @Post('/GetBankPassword')
+  @ApiOperation({ summary: '查詢資金密碼' })
+  @Public()
+  async GetBankPassword(
+    @Res() res: Response,
+    @Body() body: GetBankPasswordModel,
+  ): Promise<any> {
+    const result: string = await this.memberService.getBankPassword(body);
     return res.status(200).format({
       'application/json': function () {
         res.send(result);

@@ -5,6 +5,7 @@ import * as cache from 'memory-cache';
 import { MemberLoginModel } from 'src/model/member-login.model';
 import { UserInfoModel } from 'src/model/member-userinfo.model';
 import { UpdateMemberStatusModel } from 'src/model/member-update-member-status.model';
+import { GetBankPasswordModel } from 'src/model/member-get-bank-password.model';
 
 @Injectable()
 export class MemberService {
@@ -184,6 +185,24 @@ export class MemberService {
       .input('club_id', data.club_id)
       .query(
         `UPDATE [T_Club] SET ${data.field_name} = @status WHERE Club_id = @club_id `,
+      );
+
+    await pool.close();
+
+    return result.recordsets;
+  }
+  /**
+   * 查詢資金密碼
+   */
+  async getBankPassword(data: GetBankPasswordModel): Promise<any> {
+    const pool = new ConnectionPool(this.dbConfig);
+    await pool.connect();
+
+    const request = new Request(pool);
+    const result = await request
+      .input('club_id', data.club_id)
+      .query(
+        `SELECT * FROM [HKNetGame_HJ].[dbo].[T_BankAccount_Club] WHERE [Club_Id] = '${data.club_id}'`,
       );
 
     await pool.close();
