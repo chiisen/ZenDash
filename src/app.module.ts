@@ -14,6 +14,8 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { EventsGateway } from './events.gateway';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from './schedule/tasksService';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './test/user.module';
 
 @Module({
   imports: [
@@ -37,6 +39,13 @@ import { TasksService } from './schedule/tasksService';
         },
       },
     }),
+    TypeOrmModule.forRoot({
+      type: 'sqlite', // 指定使用 SQLite 数据库
+      database: 'data/database.db', // 数据库文件路径
+      entities: [__dirname + '/**/*.entity{.ts,.js}'], // 指定实体路径
+      synchronize: true, // 在开发过程中，自动同步数据库结构
+    }),
+    UserModule,
   ],
   controllers: [
     AppController,
