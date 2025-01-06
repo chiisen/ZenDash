@@ -92,8 +92,7 @@ export class MemberService {
           token,
           '57d1b8f4e02eced059d3da10de9dcde44319bbf4ab667e43edfe74fb53ee8429',
         );
-        const clubid = decoded.clubid;
-        console.log(clubid);
+        decoded.clubid;
       } catch (err) {
         console.error('Failed to decode JWT', err);
       }

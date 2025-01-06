@@ -18,7 +18,17 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<any> {
     await this.userRepository.delete(id);
+    return {
+      status: 1,
+      desc: 'SUCCESS',
+      result: null,
+      errorDetail: null,
+    };
+  }
+  async createUser(name: string, description: string): Promise<User> {
+    const user = this.userRepository.create({ name, description });
+    return this.userRepository.save(user);
   }
 }

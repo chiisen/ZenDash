@@ -34,8 +34,8 @@ export class GameService {
         token,
         '57d1b8f4e02eced059d3da10de9dcde44319bbf4ab667e43edfe74fb53ee8429',
       );
-      const clubid = decoded.clubid;
-      console.log(clubid);
+      decoded.clubid;
+      // console.log(clubid);
     } catch (err) {
       console.error('Failed to decode JWT', err);
     }
@@ -95,7 +95,7 @@ export class GameService {
       isRedisHealthy = error.message;
     }
     if (isRedisHealthy == 'PONG') {
-      console.log('Redis is healthy');
+      // console.log('Redis is healthy');
     }
 
     return { isDbHealthy: result.recordset, isRedisHealthy }; // or result.returnValue depending on your SP
@@ -221,7 +221,7 @@ export class GameService {
       };
 
       // 打印 JSON 对象
-      console.log(userInfo);
+      // console.log(userInfo);
 
       const login = await myThis.callHttpPostApi(
         `${this.host}/api/Member/login`,
