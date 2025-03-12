@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class Member {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,4 +10,7 @@ export class User {
 
   @Column()
   description: string;
+
+  @Column()
+  sort: number;
 }

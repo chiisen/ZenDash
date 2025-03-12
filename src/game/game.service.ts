@@ -10,6 +10,7 @@ import {
   GameListModel,
   BankInfoModel,
 } from '../model/game.model';
+import * as sqlite3 from 'sqlite3';
 
 @Injectable()
 export class GameService {
@@ -24,6 +25,7 @@ export class GameService {
       trustServerCertificate: true, // enabling this option allows self-signed and expired certificates
     },
   };
+  private dbPath = '././data/database.db';
   private host = 'https://pwaapi.bacctest.com';
   /**
    * 取得進桌的進線 url (測試用)
@@ -69,36 +71,18 @@ export class GameService {
    * 服務狀態檢查
    */
   async getHealthCheck(): Promise<any> {
-    let result;
-    try {
-      const pool = new ConnectionPool(this.dbConfig);
-      await pool.connect();
-
-      const request = new Request(pool);
-      result = await request.query(
-        "SELECT name, state_desc FROM sys.databases WHERE name = 'HKNetGame_HJ';",
-      );
-
-      await pool.close();
-    } catch (error) {
-      console.error('Error Message:', error.message);
-    }
-
-    let isRedisHealthy;
-    try {
-      isRedisHealthy = await this.redis.ping();
-      if (isRedisHealthy !== 'PONG') {
-        isRedisHealthy = 'Redis is not healthy';
-      }
-    } catch (error) {
-      console.error('Error Message:', error.message);
-      isRedisHealthy = error.message;
-    }
-    if (isRedisHealthy == 'PONG') {
-      // console.log('Redis is healthy');
-    }
-
-    return { isDbHealthy: result.recordset, isRedisHealthy }; // or result.returnValue depending on your SP
+    return new Promise((resolve, reject) => {
+      const db = new sqlite3.Database(this.dbPath);
+      console.log(db);
+      db.all('SELECT * FROM healstatus', (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+      db.close();
+    });
   }
 
   /**

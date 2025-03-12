@@ -66,7 +66,12 @@ export class GameController {
     const result: string = await this.gameService.getHealthCheck();
     return res.status(200).format({
       'application/json': function () {
-        res.send(result);
+        res.send({
+          status: 1,
+          desc: 'SUCCESS',
+          result: result[0],
+          errorDetail: null,
+        });
       },
     });
   }

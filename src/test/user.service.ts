@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { Member } from './user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(Member)
+    private userRepository: Repository<Member>,
   ) {}
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<Member[]> {
     return this.userRepository.find();
   }
 
-  findOne(id: number): Promise<User> {
+  findOne(id: number): Promise<Member> {
     return this.userRepository.findOneBy({ id });
   }
 
-  async remove(id: number): Promise<any> {
-    await this.userRepository.delete(id);
+  async remove(sort: number): Promise<any> {
+    await this.userRepository.delete(sort);
     return {
       status: 1,
       desc: 'SUCCESS',
@@ -27,8 +27,12 @@ export class UserService {
       errorDetail: null,
     };
   }
-  async createUser(name: string, description: string): Promise<User> {
-    const user = this.userRepository.create({ name, description });
+  async createUser(
+    name: string,
+    description: string,
+    sort: number,
+  ): Promise<Member> {
+    const user = this.userRepository.create({ name, description, sort });
     return this.userRepository.save(user);
   }
 }

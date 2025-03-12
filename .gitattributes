@@ -1,0 +1,6 @@
+# 目前不採用pnp模式，所以大部分不太需要，只剩release需要
+# /.yarn/**            linguist-vendored
+/.yarn/releases/*    binary
+# /.yarn/plugins/**/*  binary
+# /.pnp.*              binary linguist-generated
+* text=auto eol=lf
