@@ -48,7 +48,7 @@ import { Game, GameSchema } from './game/game.schema';
       synchronize: true, // 在开发过程中，自动同步数据库结构
     }),
     UserModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/cookie'),
+    MongooseModule.forRoot('mongodb://localhost/cookie'),
     MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
     // 引入 GameModule
   ],
