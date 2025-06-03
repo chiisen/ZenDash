@@ -127,14 +127,13 @@ export class GameController {
   }
 
   @Post('/creategames')
-  create(@Body() createGameDto: any) {
-    const data = this.gameService.createGame(createGameDto);
-    return {
-      status: 1,
-      desc: 'SUCCESS',
-      result: data,
-      errorDetail: null,
-    };
+  create(@Body() createGameDto: any, @Res() res: Response): any {
+    this.gameService.createGame(createGameDto);
+    return res.status(200).format({
+      'application/json': function () {
+        res.send('OK');
+      },
+    });
   }
 
   @Get('/games')
@@ -142,17 +141,17 @@ export class GameController {
     return this.gameService.findAllGames();
   }
 
-  @Get(':id')
+  @Get('/games:id')
   findOne(@Param('id') id: string): Promise<Game> {
     return this.gameService.findGameById(id);
   }
 
-  @Put(':id')
+  @Put('updategames:id')
   update(@Param('id') id: string, @Body() updateGameDto: any): Promise<Game> {
     return this.gameService.updateGame(id, updateGameDto);
   }
 
-  @Delete(':id')
+  @Delete('deletegames:id')
   remove(@Param('id') id: string): Promise<Game> {
     return this.gameService.deleteGame(id);
   }
