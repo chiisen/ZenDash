@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type GameDocument = Game & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Game {
   @Prop({ required: true })
   name: string;
