@@ -7,6 +7,9 @@ import {
   UseGuards,
   Body,
   UseInterceptors,
+  Param,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,7 +19,7 @@ import { LoggingInterceptor } from '../middleware/logging.interceptor';
 import { ApiOperation } from '@nestjs/swagger';
 import { AllGameTokenModel, BankInfoModel } from '../model/game.model';
 import { ServerIdModel } from '../model/game.model';
-
+import { Game } from './game.schema';
 @Controller('/api/game')
 @UseInterceptors(LoggingInterceptor)
 export class GameController {
@@ -121,5 +124,36 @@ export class GameController {
         res.send('OK');
       },
     });
+  }
+
+  @Post('/creategames')
+  create(@Body() createGameDto: any) {
+    const data = this.gameService.createGame(createGameDto);
+    return {
+      status: 1,
+      desc: 'SUCCESS',
+      result: data,
+      errorDetail: null,
+    };
+  }
+
+  @Get('/games')
+  findAll(): Promise<Game[]> {
+    return this.gameService.findAllGames();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Game> {
+    return this.gameService.findGameById(id);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateGameDto: any): Promise<Game> {
+    return this.gameService.updateGame(id, updateGameDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<Game> {
+    return this.gameService.deleteGame(id);
   }
 }

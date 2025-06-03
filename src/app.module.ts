@@ -16,7 +16,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from './schedule/tasksService';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './test/user.module';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { Game, GameSchema } from './game/game.schema';
+// import { GameModule } from './game/game.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -46,6 +48,9 @@ import { UserModule } from './test/user.module';
       synchronize: true, // 在开发过程中，自动同步数据库结构
     }),
     UserModule,
+    MongooseModule.forRoot('mongodb://localhost:27017/cookie'),
+    MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
+    // 引入 GameModule
   ],
   controllers: [
     AppController,
