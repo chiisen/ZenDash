@@ -9,6 +9,8 @@ import { PassportModule } from '@nestjs/passport';
 import { HttpStrategy } from './middleware/http.strategy';
 import { GameController } from './game/game.controller';
 import { GameService } from './game/game.service';
+import { TableController } from './table/table.controller';
+import { TableService } from './table/table.service';
 import { ExampleController } from './example/example.controller';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { EventsGateway } from './events.gateway';
@@ -18,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './test/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Game, GameSchema } from './game/game.schema';
+import { Table, TableSchema } from './table/table.schema';
 // import { GameModule } from './game/game.module';
 @Module({
   imports: [
@@ -50,6 +53,7 @@ import { Game, GameSchema } from './game/game.schema';
     UserModule,
     MongooseModule.forRoot('mongodb://localhost/cookie'),
     MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
+    MongooseModule.forFeature([{ name: Table.name, schema: TableSchema }]),
     // 引入 GameModule
   ],
   controllers: [
@@ -57,6 +61,7 @@ import { Game, GameSchema } from './game/game.schema';
     MemberController,
     GameController,
     ExampleController,
+    TableController,
   ],
   providers: [
     AppService,
@@ -65,6 +70,7 @@ import { Game, GameSchema } from './game/game.schema';
     GameService,
     EventsGateway,
     TasksService,
+    TableService,
   ],
 })
 export class AppModule {}
