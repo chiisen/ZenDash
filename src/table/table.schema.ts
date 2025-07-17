@@ -6,7 +6,6 @@ export type TableDocument = Table & Document;
 interface TreeNode {
   id: number;
   label: string;
-  disabled: boolean;
   children?: TreeNode[];
 }
 @Schema({ versionKey: false })
