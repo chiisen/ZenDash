@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { ConnectionPool, Request, config } from 'mssql';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
@@ -10,10 +12,14 @@ import {
   GameListModel,
   BankInfoModel,
 } from '../model/game.model';
-
+import * as sqlite3 from 'sqlite3';
+import { Game, GameDocument } from './game.schema';
 @Injectable()
 export class GameService {
-  constructor(@InjectRedis() private readonly redis: Redis) {}
+  constructor(
+    @InjectRedis() private readonly redis: Redis,
+    @InjectModel(Game.name) private gameModel: Model<GameDocument>,
+  ) {}
   private dbConfig: config = {
     user: 'mobile_api',
     password: 'a:oY%~^E+VU0',
@@ -24,6 +30,7 @@ export class GameService {
       trustServerCertificate: true, // enabling this option allows self-signed and expired certificates
     },
   };
+  private dbPath = '././data/database.db';
   private host = 'https://pwaapi.bacctest.com';
   /**
    * 取得進桌的進線 url (測試用)
@@ -34,8 +41,8 @@ export class GameService {
         token,
         '57d1b8f4e02eced059d3da10de9dcde44319bbf4ab667e43edfe74fb53ee8429',
       );
-      const clubid = decoded.clubid;
-      console.log(clubid);
+      decoded.clubid;
+      // console.log(clubid);
     } catch (err) {
       console.error('Failed to decode JWT', err);
     }
@@ -69,36 +76,17 @@ export class GameService {
    * 服務狀態檢查
    */
   async getHealthCheck(): Promise<any> {
-    let result;
-    try {
-      const pool = new ConnectionPool(this.dbConfig);
-      await pool.connect();
-
-      const request = new Request(pool);
-      result = await request.query(
-        "SELECT name, state_desc FROM sys.databases WHERE name = 'HKNetGame_HJ';",
-      );
-
-      await pool.close();
-    } catch (error) {
-      console.error('Error Message:', error.message);
-    }
-
-    let isRedisHealthy;
-    try {
-      isRedisHealthy = await this.redis.ping();
-      if (isRedisHealthy !== 'PONG') {
-        isRedisHealthy = 'Redis is not healthy';
-      }
-    } catch (error) {
-      console.error('Error Message:', error.message);
-      isRedisHealthy = error.message;
-    }
-    if (isRedisHealthy == 'PONG') {
-      console.log('Redis is healthy');
-    }
-
-    return { isDbHealthy: result.recordset, isRedisHealthy }; // or result.returnValue depending on your SP
+    return new Promise((resolve, reject) => {
+      const db = new sqlite3.Database(this.dbPath);
+      db.all('SELECT * FROM healstatus', (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+      db.close();
+    });
   }
 
   /**
@@ -221,7 +209,7 @@ export class GameService {
       };
 
       // 打印 JSON 对象
-      console.log(userInfo);
+      // console.log(userInfo);
 
       const login = await myThis.callHttpPostApi(
         `${this.host}/api/Member/login`,
@@ -311,5 +299,28 @@ export class GameService {
         console.error('Unexpected error:', error);
       }
     }
+  }
+
+  async createGame(createGameDto: any): Promise<Game> {
+    const newGame = new this.gameModel(createGameDto);
+    return newGame.save();
+  }
+
+  async findAllGames(): Promise<Game[]> {
+    return this.gameModel.find().exec();
+  }
+
+  async findGameById(id: string): Promise<Game> {
+    return this.gameModel.findById(id).exec();
+  }
+
+  async updateGame(id: string, updateGameDto: any): Promise<Game> {
+    return this.gameModel
+      .findByIdAndUpdate(id, updateGameDto, { new: true })
+      .exec();
+  }
+
+  async deleteGame(id: string): Promise<Game> {
+    return this.gameModel.findByIdAndDelete(id).exec();
   }
 }

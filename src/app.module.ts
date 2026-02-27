@@ -9,12 +9,19 @@ import { PassportModule } from '@nestjs/passport';
 import { HttpStrategy } from './middleware/http.strategy';
 import { GameController } from './game/game.controller';
 import { GameService } from './game/game.service';
+import { TableController } from './table/table.controller';
+import { TableService } from './table/table.service';
 import { ExampleController } from './example/example.controller';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { EventsGateway } from './events.gateway';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from './schedule/tasksService';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './test/user.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Game, GameSchema } from './game/game.schema';
+import { Table, TableSchema } from './table/table.schema';
+// import { GameModule } from './game/game.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -37,12 +44,24 @@ import { TasksService } from './schedule/tasksService';
         },
       },
     }),
+    TypeOrmModule.forRoot({
+      type: 'sqlite', // 指定使用 SQLite 数据库
+      database: 'data/database.db', // 数据库文件路径
+      entities: [__dirname + '/**/*.entity{.ts,.js}'], // 指定实体路径
+      synchronize: true, // 在开发过程中，自动同步数据库结构
+    }),
+    UserModule,
+    MongooseModule.forRoot('mongodb://localhost/cookie'),
+    MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
+    MongooseModule.forFeature([{ name: Table.name, schema: TableSchema }]),
+    // 引入 GameModule
   ],
   controllers: [
     AppController,
     MemberController,
     GameController,
     ExampleController,
+    TableController,
   ],
   providers: [
     AppService,
@@ -51,6 +70,7 @@ import { TasksService } from './schedule/tasksService';
     GameService,
     EventsGateway,
     TasksService,
+    TableService,
   ],
 })
 export class AppModule {}

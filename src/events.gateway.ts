@@ -31,9 +31,9 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
   ): void {
-    console.log(`Message from client ${client.id}: ${data}`);
+    // console.log(`Message from client ${client.id}: ${data}`);
     this.server.emit('message', data + ' @SERVER');
-    console.log(`Client message: ${data}`);
+    // console.log(`Client message: ${data}`);
     // 回傳訊息給發送消息的客戶端
     client.emit('response', `Received your message: ${data}`);
   }

@@ -1,4 +1,8 @@
 {
+    "eslint.enable": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "always",
+    },
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#2f7c47",
         "activityBar.background": "#2f7c47",
